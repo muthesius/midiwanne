@@ -5,6 +5,10 @@
 
 // Pin numbers for sensor steps, grouped per sensor
 int inputPins[][3] = {{2, 3, 4}, {5, 6, 7}, {8, 9, 10}};
+// MIDI pitches per sensor
+int pitches[] = {42, 54, 62};
+// MIDI velocities per sensor step
+int velocities[] = {31, 63, 127};
 
 void setup() {
     for (int i = 0; i < 3; i++) {
@@ -20,17 +24,20 @@ void setup() {
 }
 
 void loop() {
-    // TODO Go through all input pin groups
+    // Go through all input pin groups
+    for (int i = 0; i < 3; i++) {
+        int velocity = 0;
+        // Identify (physically) topmost closed circuit (if any)
+        for (int j = 0; j < 3; j++) {
+            int val = digitalRead(inputPins[i][j]);
+            if (val == HIGH) {
+                velocity = velocities[j];
+            }
+        }
+        /* Send a MIDI note of the corresponding pitch/velocity for as long
+           as it is closed.
 
-    // TODO Identify (physically) topmost closed circuit (if any)
-
-    // TODO Send a MIDI note of the corresponding pitch/velocity for as long as it is closed
-
-    // DEBUG Send a note to check MIDI output
-    if (true) { // TODO check real switch
-        MIDI.sendNoteOn(42, 127, 1);
-        delay(500);
-        MIDI.sendNoteOff(42, 0, 1);
-        delay(1000);
+           Hint: sendNoteOn with velocity = 0 is like sendNoteOff */
+        MIDI.sendNoteOn(pitches[i], velocity, 1);
     }
 }
