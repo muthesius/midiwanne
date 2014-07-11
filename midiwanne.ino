@@ -29,8 +29,8 @@ void loop() {
         int velocity = 0;
         // Identify (physically) topmost closed circuit (if any)
         for (int j = 0; j < 3; j++) {
-            int val = digitalRead(inputPins[i][j]);
-            if (val == HIGH) {
+            if (LOW == digitalRead(inputPins[i][j])) {
+                // Circuit is closed (inverted logic b/c pullup)
                 velocity = velocities[j];
             }
         }
