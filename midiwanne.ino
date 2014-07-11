@@ -1,6 +1,7 @@
 #include <MIDI.h>
 
-MIDI_CREATE_DEFAULT_INSTANCE();
+// This is only needed for MIDI Library v >= 4.2
+//MIDI_CREATE_DEFAULT_INSTANCE();
 
 // Pin numbers for sensor steps, grouped per sensor
 int inputPins[][3] = {{2, 3, 4}, {5, 6, 7}, {8, 9, 10}};
