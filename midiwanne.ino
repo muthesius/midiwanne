@@ -2,8 +2,6 @@
 
 MIDI_CREATE_DEFAULT_INSTANCE();
 
-#define DELAY 500
-
 void setup() {
     MIDI.begin();
 }
@@ -18,7 +16,8 @@ void loop() {
     // DEBUG Send a note to check MIDI output
     if (true) { // TODO check real switch
         MIDI.sendNoteOn(42, 127, 1);
-        delay(DELAY);
+        delay(500);
         MIDI.sendNoteOff(42, 0, 1);
+        delay(1000);
     }
 }
