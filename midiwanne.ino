@@ -3,16 +3,20 @@
 // This is only needed for MIDI Library v >= 4.2
 //MIDI_CREATE_DEFAULT_INSTANCE();
 
+byte const sensorCount = 3;
+byte const sensorStepCount = 3;
 // Pin numbers for sensor steps, grouped per sensor
-int inputPins[][3] = {{2, 3, 4}, {5, 6, 7}, {8, 9, 10}};
+byte const inputPins[sensorCount][sensorStepCount] = {
+    {2, 3, 4}, {5, 6, 7}, {8, 9, 10}};
 // MIDI pitches per sensor
-int pitches[] = {42, 54, 62};
+byte const pitches[sensorCount] = {42, 54, 62};
 // MIDI velocities per sensor step
-int velocities[] = {31, 63, 127};
+byte const velocities[sensorStepCount] = {31, 63, 127};
+byte const midiChannelOut = 1;
 
 void setup() {
-    for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 3; j++) {
+    for (byte i = 0; i < sensorCount; i++) {
+        for (byte j = 0; j < sensorStepCount; j++) {
             // Declare sensor steps as input
             pinMode(inputPins[i][j], INPUT_PULLUP);
         }
@@ -23,10 +27,10 @@ void setup() {
 
 void loop() {
     // Go through all input pin groups
-    for (int i = 0; i < 3; i++) {
-        int velocity = 0;
+    for (byte i = 0; i < sensorCount; i++) {
+        byte velocity = 0;
         // Identify (physically) topmost closed circuit (if any)
-        for (int j = 0; j < 3; j++) {
+        for (byte j = 0; j < sensorStepCount; j++) {
             if (LOW == digitalRead(inputPins[i][j])) {
                 // Circuit is closed (inverted logic b/c pullup)
                 velocity = velocities[j];
@@ -36,6 +40,6 @@ void loop() {
            as it is closed.
 
            Hint: sendNoteOn with velocity = 0 is like sendNoteOff */
-        MIDI.sendNoteOn(pitches[i], velocity, 1);
+        MIDI.sendNoteOn(pitches[i], velocity, midiChannelOut);
     }
 }
