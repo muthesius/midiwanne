@@ -23,6 +23,8 @@ void setup() {
     }
 
     MIDI.begin();
+    // This is only needed when debugging, e.g. with Hairless MIDI
+    Serial.begin(115200);
 }
 
 void loop() {
