@@ -9,7 +9,7 @@ byte const sensorStepCount = 3;
 byte const inputPins[sensorCount][sensorStepCount] = {
     {2, 3, 4}, {5, 6, 7}, {8, 9, 10}};
 // MIDI pitches per sensor
-byte const pitches[sensorCount] = {42, 54, 62};
+byte const pitches[sensorCount] = {69, 72, 76}; // A4, C5, E5
 // MIDI velocities per sensor step
 byte const velocities[sensorStepCount] = {31, 63, 127};
 byte const midiChannelOut = 1;
@@ -41,7 +41,19 @@ void loop() {
         /* Send a MIDI note of the corresponding pitch/velocity for as long
            as it is closed.
 
-           Hint: sendNoteOn with velocity = 0 is like sendNoteOff */
-        MIDI.sendNoteOn(pitches[i], velocity, midiChannelOut);
+           Hint: sendNoteOn with velocity = 0 is like sendNoteOff
+           *but* depending on the output they may still be considered
+           different messages */
+        if (velocity > 0) {
+            // The sendNoteOff is needed for (downward) changes in velocity
+            // Again: This is pretty dependent on the output
+            MIDI.sendNoteOff(pitches[i], 64, midiChannelOut);
+            MIDI.sendNoteOn(pitches[i], velocity, midiChannelOut);
+        } else {
+            MIDI.sendNoteOff(pitches[i], 64, midiChannelOut);
+        }
     }
+    // Depending on the output there should be a longer/shorter delay
+    // between notes - think keypress on pianos vs. organs
+    //delay(200);
 }
