@@ -12,7 +12,6 @@ byte const inputPins[sensorCount][sensorStepCount] = {
 byte const pitches[sensorCount] = {69, 72, 76}; // A4, C5, E5
 // MIDI velocities per sensor step
 byte const velocities[sensorStepCount] = {31, 63, 127};
-byte const midiChannelOut = 1;
 
 void setup() {
     for (byte i = 0; i < sensorCount; i++) {
@@ -24,13 +23,14 @@ void setup() {
 
     MIDI.begin();
     // This is only needed when debugging, e.g. with Hairless MIDI
-    Serial.begin(115200);
+    //Serial.begin(115200);
 }
 
 void loop() {
     // Go through all input pin groups
     for (byte i = 0; i < sensorCount; i++) {
         byte velocity = 0;
+        byte midiChannelOut = i + 1;
         // Identify (physically) topmost closed circuit (if any)
         for (byte j = 0; j < sensorStepCount; j++) {
             if (LOW == digitalRead(inputPins[i][j])) {
